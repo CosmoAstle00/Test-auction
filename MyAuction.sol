@@ -53,4 +53,23 @@ contract TokenAuction {
         auctionEnded = false;
     }
 
+ function placeBid(uint256 _amount) external notAuctionEnded onlyBeforeAuctionEnd {
+        require(_amount > highestBid, "Bid must be greater than the current highest bid");
+        require(_amount >= reservePrice, "Bid must be greater than or equal to the reserve price");
+
+        if (highestBidder != address(0)) {
+            // Refund the previous highest bidder
+            require(token.transfer(highestBidder, highestBid), "Token transfer failed");
+        }
+
+        // Update highest bidder and bid amount
+        highestBidder = msg.sender;
+        highestBid = _amount;
+
+        // Transfer the bid amount to the contract
+        require(token.transferFrom(msg.sender, address(this), _amount), "Token transfer failed");
+
+        emit BidPlaced(msg.sender, _amount);
+    }
+
 }
