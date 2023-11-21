@@ -71,5 +71,15 @@ contract TokenAuction {
 
         emit BidPlaced(msg.sender, _amount);
     }
+function endAuction() external onlyAdmin onlyAfterAuctionEnd notAuctionEnded {
+        // Mark the auction as ended
+        auctionEnded = true;
 
+        if (highestBidder != address(0)) {
+            // Transfer the tokens to the highest bidder
+            require(token.transfer(highestBidder, highestBid), "Token transfer failed");
+        }
+
+        emit AuctionEnded(highestBidder, highestBid);
+    }
 }
