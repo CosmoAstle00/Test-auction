@@ -82,4 +82,18 @@ function endAuction() external onlyAdmin onlyAfterAuctionEnd notAuctionEnded {
 
         emit AuctionEnded(highestBidder, highestBid);
     }
+function getAuctionDetails()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            address,
+            uint256,
+            bool
+        )
+    {
+        return (auctionEndTime, reservePrice, highestBid, highestBidder, block.timestamp, auctionEnded);
+    }
 }
